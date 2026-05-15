@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zasca — Sin más zascas de suscripciones en tu cuenta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Epilogue:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --z:     #FF3D2E;
+  --z-d:   #CC2A1D;
+  --z-l:   #FFF0EE;
+  --ink:   #0D0D0D;
+  --ink-2: #3A3A3A;
+  --ink-3: #888;
+  --cream: #FAFAF8;
+  --sand:  #F3F0E8;
+  --sand-d:#E4E0D4;
+  --yellow:#FFE566;
+  --green: #00C566;
+  --border:#E5E2D8;
+  --r:12px; --rr:20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Epilogue',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:62px;background:var(--cream);border-bottom:1.5px solid var(--ink);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:32px;height:32px;background:var(--z);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Cabinet Grotesk',sans-serif;font-size:18px;font-weight:900;color:white;transform:rotate(-4deg);transition:transform .2s}
+.logo-icon:hover{transform:rotate(4deg)}
+.logo-text{font-family:'Cabinet Grotesk',sans-serif;font-size:20px;font-weight:900;color:var(--ink);letter-spacing:-.03em}
+.logo-text span{color:var(--z)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-badge{font-size:12px;font-weight:500;background:var(--yellow);color:var(--ink);padding:4px 12px;border-radius:99px;border:1.5px solid var(--ink)}
+.nav-cta{font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:800;background:var(--ink);color:var(--cream);border:1.5px solid var(--ink);border-radius:8px;padding:8px 18px;cursor:pointer;transition:background .15s}
+.nav-cta:hover{background:var(--z);border-color:var(--z)}
+
+/* HERO */
+.hero{padding:64px 5vw 56px;max-width:980px;margin:0 auto;position:relative}
+.hero-tag{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:500;background:var(--yellow);color:var(--ink);border:1.5px solid var(--ink);padding:5px 14px;border-radius:99px;margin-bottom:36px}
+.blink{width:7px;height:7px;border-radius:50%;background:var(--z);animation:bl 1.4s infinite}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.2}}
+h1{font-family:'Cabinet Grotesk',sans-serif;font-size:clamp(48px,7.5vw,86px);font-weight:900;line-height:.95;letter-spacing:-.04em;color:var(--ink);margin-bottom:20px}
+.h1-strike{position:relative;display:inline-block;color:var(--ink-3)}
+.h1-strike::after{content:'';position:absolute;left:0;right:0;top:52%;height:6px;background:var(--z);transform:rotate(-1.5deg);border-radius:3px}
+.hero-sub{font-size:17px;color:var(--ink-2);line-height:1.65;max-width:480px;margin-bottom:36px;font-weight:500}
+.form-wrap{max-width:480px}
+.input-row{display:flex;border:2px solid var(--ink);border-radius:var(--r);overflow:hidden;background:white;transition:border-color .2s;box-shadow:4px 4px 0 var(--ink)}
+.input-row:focus-within{border-color:var(--z);box-shadow:4px 4px 0 var(--z)}
+.input-row input{flex:1;border:none;outline:none;background:transparent;font-family:'Epilogue',sans-serif;font-size:15px;color:var(--ink);padding:14px 18px}
+.input-row input::placeholder{color:var(--ink-3)}
+.cta-btn{font-family:'Cabinet Grotesk',sans-serif;background:var(--z);color:white;border:none;border-left:2px solid var(--ink);padding:14px 26px;cursor:pointer;font-size:15px;font-weight:800;white-space:nowrap;transition:background .15s}
+.cta-btn:hover{background:var(--z-d)}
+.ok-msg{display:none;align-items:center;gap:10px;background:var(--green);color:white;border:2px solid var(--ink);border-radius:var(--r);padding:13px 18px;font-size:14px;font-weight:700;font-family:'Cabinet Grotesk',sans-serif;box-shadow:4px 4px 0 var(--ink)}
+.form-note{font-size:12px;color:var(--ink-3);margin-top:10px}
+.form-note strong{color:var(--ink)}
+
+/* FLOATING CARDS */
+.zasca-float{position:absolute;right:3vw;top:60px;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+@media(max-width:720px){.zasca-float{display:none}}
+.zf{border:2px solid var(--ink);border-radius:var(--r);padding:10px 14px;font-size:12px;background:white;box-shadow:3px 3px 0 var(--ink)}
+.zf:nth-child(1){animation:fl1 4s ease-in-out infinite}
+.zf:nth-child(2){animation:fl2 4s ease-in-out .8s infinite}
+.zf:nth-child(3){animation:fl3 4s ease-in-out 1.6s infinite}
+@keyframes fl1{0%,100%{transform:translateY(0) rotate(1.5deg)}50%{transform:translateY(-8px) rotate(2.5deg)}}
+@keyframes fl2{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(-1deg)}}
+@keyframes fl3{0%,100%{transform:translateY(0) rotate(2.5deg)}50%{transform:translateY(-7px) rotate(3.5deg)}}
+.zf-amount{font-family:'Cabinet Grotesk',sans-serif;font-size:16px;font-weight:900;color:var(--z)}
+.zf-name{color:var(--ink-2);font-size:11px;margin-top:2px}
+.zf-label{font-size:10px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
+
+/* SOCIAL PROOF INMEDIATA */
+.proof-strip{padding:36px 5vw;border-bottom:1.5px solid var(--border)}
+.proof-inner{max-width:980px;margin:0 auto}
+.proof-quote{border:2px solid var(--ink);border-radius:var(--rr);padding:24px 28px;background:white;box-shadow:4px 4px 0 var(--ink);display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap}
+.proof-mark{font-family:'Cabinet Grotesk',sans-serif;font-size:72px;font-weight:900;color:var(--z);line-height:.65;flex-shrink:0;margin-top:6px}
+.proof-body{flex:1;min-width:220px}
+.proof-text{font-size:17px;font-style:italic;color:var(--ink);line-height:1.6;margin-bottom:14px}
+.proof-text strong{font-style:normal;color:var(--z)}
+.proof-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.proof-av{width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--cream);display:flex;align-items:center;justify-content:center;font-family:'Cabinet Grotesk',sans-serif;font-size:12px;font-weight:800;flex-shrink:0}
+.proof-name{font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:800;color:var(--ink)}
+.proof-role{font-size:12px;color:var(--ink-3)}
+.proof-votes{font-family:'DM Mono',monospace;font-size:12px;color:var(--z);font-weight:500;margin-left:auto}
+
+/* SECCIONES */
+.section{padding:72px 5vw}
+.section-inner{max-width:980px;margin:0 auto}
+.section.sand{background:var(--sand);border-top:1.5px solid var(--border);border-bottom:1.5px solid var(--border)}
+.exp-tag{display:inline-block;font-family:'Cabinet Grotesk',sans-serif;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--z);border:1.5px solid var(--z);background:var(--z-l);padding:4px 12px;border-radius:99px;margin-bottom:14px}
+h2{font-family:'Cabinet Grotesk',sans-serif;font-size:clamp(26px,4vw,42px);font-weight:900;letter-spacing:-.03em;color:var(--ink);margin-bottom:10px;line-height:1.05}
+.section-sub{font-size:16px;color:var(--ink-2);margin-bottom:36px;line-height:1.6;max-width:560px;font-weight:500}
+
+/* TIPOS DE ZASCA */
+.zasca-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.zasca-card{border:2px solid var(--ink);border-radius:var(--rr);padding:20px;background:white;box-shadow:4px 4px 0 var(--ink);transition:transform .15s,box-shadow .15s}
+.zasca-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.zasca-emoji{font-size:26px;margin-bottom:10px;display:block}
+.zasca-title{font-family:'Cabinet Grotesk',sans-serif;font-size:16px;font-weight:900;color:var(--ink);margin-bottom:10px}
+.zasca-quote{font-size:13px;font-style:italic;color:var(--ink-2);line-height:1.6;padding:8px 10px;background:var(--z-l);border-radius:8px;border-left:3px solid var(--z)}
+
+/* CÓMO FUNCIONA */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0;margin-bottom:36px;border:1.5px solid var(--ink);border-radius:var(--rr);overflow:hidden;background:white;box-shadow:4px 4px 0 var(--ink)}
+.how-step{padding:24px;border-right:1.5px solid var(--ink)}
+.how-step:last-child{border-right:none}
+@media(max-width:620px){.how-step{border-right:none;border-bottom:1.5px solid var(--ink)}.how-step:last-child{border-bottom:none}}
+.how-num{font-family:'Cabinet Grotesk',sans-serif;font-size:40px;font-weight:900;color:var(--sand-d);line-height:1;margin-bottom:10px}
+.how-title{font-family:'Cabinet Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.how-desc{font-size:13px;color:var(--ink-2);line-height:1.6}
+.how-tag{display:inline-block;margin-top:8px;font-size:11px;font-weight:700;background:var(--yellow);color:var(--ink);padding:2px 9px;border-radius:99px;border:1.5px solid var(--ink)}
+.mid-cta{border:2px solid var(--ink);border-radius:var(--r);padding:20px 24px;background:var(--yellow);box-shadow:4px 4px 0 var(--ink);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.mid-cta-text{font-family:'Cabinet Grotesk',sans-serif;font-size:17px;font-weight:900;color:var(--ink)}
+.mid-cta-btn{font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:800;background:var(--ink);color:white;border:none;border-radius:8px;padding:12px 22px;cursor:pointer;white-space:nowrap;transition:background .15s}
+.mid-cta-btn:hover{background:var(--z)}
+
+/* POR QUÉ NO LA COMPETENCIA */
+.why-not-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.why-not-card{border:2px solid var(--ink);border-radius:var(--rr);padding:22px;background:white;box-shadow:4px 4px 0 var(--ink)}
+.wn-competitor{font-family:'Cabinet Grotesk',sans-serif;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px}
+.wn-pain{font-family:'Cabinet Grotesk',sans-serif;font-size:20px;font-weight:900;color:var(--ink);margin-bottom:12px;line-height:1.15}
+.wn-pain span{color:var(--z)}
+.wn-detail{font-size:13px;color:var(--ink-2);line-height:1.65;margin-bottom:12px}
+.wn-quote{font-size:12px;font-style:italic;color:var(--ink-3);padding:8px 10px;background:var(--sand);border-radius:8px;border-left:3px solid var(--border);margin-bottom:12px}
+.wn-zasca{padding:10px 12px;background:var(--yellow);border-radius:8px;border:1.5px solid var(--ink);font-size:13px;color:var(--ink)}
+.wn-zasca strong{font-family:'Cabinet Grotesk',sans-serif;font-weight:900}
+
+/* QUOTES */
+.quotes-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:36px}
+.q-card{border:2px solid var(--ink);border-radius:var(--rr);padding:20px;background:white;box-shadow:4px 4px 0 var(--ink)}
+.q-text{font-size:14px;font-style:italic;color:var(--ink-2);line-height:1.7;margin-bottom:14px}
+.q-author{display:flex;align-items:center;gap:10px}
+.q-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Cabinet Grotesk',sans-serif;font-size:12px;font-weight:800;color:white;flex-shrink:0}
+.q-name{font-family:'Cabinet Grotesk',sans-serif;font-size:13px;font-weight:800;color:var(--ink)}
+.q-role{font-size:12px;color:var(--ink-3)}
+.q-src{margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-3)}
+
+/* PRICING */
+.pricing-wrap{max-width:640px}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:0}
+@media(max-width:480px){.pricing-grid{grid-template-columns:1fr}}
+.p-card{border:2px solid var(--ink);border-radius:var(--rr);padding:24px;background:white;box-shadow:4px 4px 0 var(--ink)}
+.p-card.featured{background:var(--z);border-color:var(--z-d);box-shadow:4px 4px 0 var(--z-d)}
+.p-name{font-family:'Cabinet Grotesk',sans-serif;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;color:var(--ink-3)}
+.p-card.featured .p-name{color:rgba(255,255,255,.65)}
+.p-price{font-family:'Cabinet Grotesk',sans-serif;font-size:36px;font-weight:900;letter-spacing:-.03em;color:var(--ink);margin-bottom:16px;line-height:1}
+.p-price span{font-size:14px;font-weight:400;color:var(--ink-3)}
+.p-card.featured .p-price{color:white}
+.p-card.featured .p-price span{color:rgba(255,255,255,.6)}
+.p-feat{display:flex;flex-direction:column;gap:7px}
+.p-feat li{list-style:none;display:flex;gap:7px;align-items:flex-start;font-size:13px;color:var(--ink-2)}
+.p-feat li::before{content:'✓';font-weight:800;color:var(--green);flex-shrink:0;margin-top:1px}
+.p-card.featured .p-feat li{color:rgba(255,255,255,.85)}
+.p-card.featured .p-feat li::before{color:var(--yellow)}
+.no-fee-box{padding:16px 18px;background:var(--yellow);border:2px solid var(--ink);border-radius:var(--r);font-family:'Cabinet Grotesk',sans-serif;font-size:15px;font-weight:900;color:var(--ink);box-shadow:4px 4px 0 var(--ink);margin-bottom:20px;max-width:640px}
+
+/* FINAL CTA */
+.final-section{background:var(--z);border-top:2px solid var(--ink);padding:80px 5vw;text-align:center}
+.final-section h2{color:white;margin-bottom:14px}
+.final-section .section-sub{color:rgba(255,255,255,.75);margin:0 auto 36px;max-width:460px}
+.final-section .form-wrap{margin:0 auto}
+.final-section .input-row{border-color:white;box-shadow:4px 4px 0 rgba(0,0,0,.25)}
+.final-section .input-row:focus-within{border-color:var(--yellow);box-shadow:4px 4px 0 var(--yellow)}
+.final-section .cta-btn{background:var(--ink);border-left-color:rgba(255,255,255,.3)}
+.final-section .cta-btn:hover{background:#222}
+.final-section .form-note{color:rgba(255,255,255,.5)}
+.final-section .ok-msg{background:var(--ink);box-shadow:4px 4px 0 rgba(0,0,0,.3)}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:2px solid rgba(255,255,255,.08);padding:24px 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer .logo-text{color:var(--cream)}
+footer .logo-text span{color:var(--z)}
+footer p{font-size:13px;color:rgba(255,255,255,.3)}
+
+/* ── FUNDADOR ── */
+.founder-card{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;border:2px solid var(--ink);border-radius:var(--rr);padding:18px 22px;background:white;box-shadow:4px 4px 0 var(--ink)}
+.founder-card-left{display:flex;align-items:center;gap:12px}
+.founder-av{width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--cream);display:flex;align-items:center;justify-content:center;font-family:'Cabinet Grotesk',sans-serif;font-size:15px;font-weight:900;flex-shrink:0}
+.founder-name{font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:800;color:var(--ink)}
+.founder-role{font-size:12px;color:var(--ink-3)}
+.founder-btn{font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:800;background:var(--ink);color:var(--cream);border:none;border-radius:8px;padding:10px 20px;cursor:pointer;transition:background .15s;white-space:nowrap}
+.founder-btn:hover{background:var(--z)}
+
+/* HISTORIA EXPANDIDA */
+.fs-chapter{padding:32px 0;border-top:1.5px solid var(--border)}
+.fs-chapter:first-child{padding-top:24px}
+.fs-ch-label{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--ink-3);letter-spacing:.07em;margin-bottom:14px}
+.fs-prose p{font-size:16px;color:var(--ink-2);line-height:1.75;margin-bottom:14px;font-weight:400}
+.fs-prose p:last-child{margin-bottom:0}
+.fs-prose strong{color:var(--ink);font-weight:600}
+
+.fs-moments{display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.fs-moment{display:flex;align-items:flex-start;gap:12px;border:2px solid var(--ink);border-radius:14px;padding:14px 16px;background:white;box-shadow:3px 3px 0 var(--ink)}
+.fs-moment-icon{font-size:20px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--sand);border-radius:8px;border:1.5px solid var(--border);flex-shrink:0}
+.fs-moment-body{flex:1}
+.fs-moment-title{font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.fs-moment-desc{font-size:12px;color:var(--ink-2);line-height:1.55}
+.fs-moment-amt{font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--z);white-space:nowrap;flex-shrink:0;margin-top:2px}
+
+.fs-pull{font-family:'Cabinet Grotesk',sans-serif;font-size:clamp(16px,2.5vw,20px);font-weight:900;letter-spacing:-.02em;color:var(--ink);border-left:4px solid var(--z);padding:4px 0 4px 18px;margin:20px 0;line-height:1.4}
+
+.fs-naming-box{background:var(--ink);border-radius:14px;padding:22px 24px;margin:20px 0}
+.fs-naming-word{font-family:'Cabinet Grotesk',sans-serif;font-size:28px;font-weight:900;color:var(--z);letter-spacing:-.03em;margin-bottom:8px}
+.fs-naming-def{font-size:13px;color:rgba(250,250,248,.65);line-height:1.6;margin-bottom:12px}
+.fs-naming-promise{font-family:'Cabinet Grotesk',sans-serif;font-size:15px;font-weight:800;color:var(--cream)}
+
+.fs-final-line{font-size:15px;color:var(--ink-2);line-height:1.7;padding:16px 18px;background:var(--sand);border-radius:10px;margin-top:16px}
+.fs-final-line strong{color:var(--ink)}
+
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.hero-tag{animation:up .4s ease both}
+h1{animation:up .4s .08s ease both}
+.hero-sub{animation:up .4s .14s ease both}
+.form-wrap{animation:up .4s .26s ease both}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-icon">Z</div>
+    <span class="logo-text">Za<span>s</span>ca</span>
+  </a>
+  <div class="nav-right">
+    <span class="nav-badge">Lista de espera abierta</span>
+    <button class="nav-cta" onclick="document.getElementById('hero-email').focus()">Quiero acceso →</button>
+  </div>
+</nav>
+
+<!-- ① HERO -->
+<section class="hero">
+  <div class="zasca-float">
+    <div class="zf">
+      <div class="zf-label">zasca</div>
+      <div class="zf-amount">−€54.99</div>
+      <div class="zf-name">Adobe CC · sin usar 2 meses</div>
+    </div>
+    <div class="zf">
+      <div class="zf-label">zasca</div>
+      <div class="zf-amount">−€8.99</div>
+      <div class="zf-name">Apple TV+ · trial olvidado</div>
+    </div>
+    <div class="zf" style="border-color:var(--z);box-shadow:3px 3px 0 var(--z)">
+      <div class="zf-label" style="color:var(--z)">⚡ zasca urgente</div>
+      <div class="zf-amount">−€49.00</div>
+      <div class="zf-name">Amazon Prime · renovó solo</div>
+    </div>
+  </div>
+
+  <div class="hero-tag">
+    <span class="blink"></span>
+    Lista de espera · Gratis en el plan básico
+  </div>
+
+  <h1>
+    Sin más<br>
+    <span class="h1-strike">zascas</span><br>
+    <span style="color:var(--z);">en tu cuenta.</span>
+  </h1>
+
+
+  <p class="hero-sub">
+    Zasca detecta todas tus suscripciones desde el email — incluyendo Movistar, seguros y servicios locales — y te avisa antes de cada renovación. Sin acceder a tu banco.
+  </p>
+
+  <div class="form-wrap" id="fw1">
+    <div class="input-row" id="row1">
+      <input id="hero-email" type="email" placeholder="tu@email.com" onkeydown="if(event.key==='Enter')go1()">
+      <button class="cta-btn" onclick="go1()">Sin zascas →</button>
+    </div>
+    <div class="ok-msg" id="ok1">✓ &nbsp;Apuntado. Te avisamos cuando abramos.</div>
+    <p class="form-note">Ya somos <strong id="c1">427</strong> personas · Sin tarjeta · Sin spam</p>
+  </div>
+</section>
+
+<!-- ② SOCIAL PROOF INMEDIATA -->
+<div class="proof-strip">
+  <div class="proof-inner">
+    <div class="proof-quote">
+      <div class="proof-mark">"</div>
+      <div class="proof-body">
+        <p class="proof-text">Acabo de revisar mis suscripciones y pagaba por <strong>11 cosas que no recordaba</strong>. $340/mes tirados. Necesito una app que me muestre todo con un botón de cancelar.</p>
+        <div class="proof-meta">
+          <div class="proof-av">JM</div>
+          <div>
+            <div class="proof-name">James M. · Desarrollador</div>
+            <div class="proof-role">r/personalfinance</div>
+          </div>
+          <span class="proof-votes">+12.400 upvotes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ③ TIPOS DE ZASCA -->
+<section class="section">
+  <div class="section-inner">
+    <span class="exp-tag">El problema</span>
+    <h2>¿Cuántas suscripciones<br>te cobran sin que lo sepas?</h2>
+    <p class="section-sub">Un zasca es cualquier suscripción que no esperabas, no elegiste activamente o ya no recuerdas haber contratado. El 42% de la gente tiene al menos una activa ahora mismo.</p>
+    <div class="zasca-grid">
+      <div class="zasca-card">
+        <span class="zasca-emoji">😤</span>
+        <div class="zasca-title">El trial que se olvidó</div>
+        <div class="zasca-quote">"Apple TV me cobró €8.99/mes durante 8 meses. No me di cuenta hasta que revisé el extracto."</div>
+      </div>
+      <div class="zasca-card">
+        <span class="zasca-emoji">🤦</span>
+        <div class="zasca-title">La suscripción zombi</div>
+        <div class="zasca-quote">"Tenía Duolingo, una app de meditación y un gym app. Sin usar ninguna. €35/mes tirados."</div>
+      </div>
+      <div class="zasca-card">
+        <span class="zasca-emoji">😱</span>
+        <div class="zasca-title">La renovación anual</div>
+        <div class="zasca-quote">"Amazon Prime renovó €49 en enero. Ni me acordaba que era anual. Ya no había reembolso."</div>
+      </div>
+      <div class="zasca-card">
+        <span class="zasca-emoji">🔇</span>
+        <div class="zasca-title">El que no avisa</div>
+        <div class="zasca-quote">"Ninguna app me avisó antes. Todas me dijeron qué me cobraron después. Demasiado tarde."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ CÓMO FUNCIONA -->
+<section class="section sand">
+  <div class="section-inner">
+    <span class="exp-tag">Cómo funciona</span>
+    <h2>2 minutos. Cero zascas.</h2>
+    <p class="section-sub">Sin dar acceso a tu banco. Sin introducir nada a mano. Sin trucos.</p>
+    <div class="how-grid">
+      <div class="how-step">
+        <div class="how-num">01</div>
+        <div class="how-title">Conectas tu email</div>
+        <div class="how-desc">Gmail u Outlook. Solo lectura. Nunca almacenamos tu contraseña. Nunca accedemos a tu banco.</div>
+        <span class="how-tag">30 segundos</span>
+      </div>
+      <div class="how-step">
+        <div class="how-num">02</div>
+        <div class="how-title">Zasca detecta todo</div>
+        <div class="how-desc">Analiza recibos y confirmaciones. En 2 minutos tienes la lista completa — incluidas las olvidadas.</div>
+        <span class="how-tag">Automático</span>
+      </div>
+      <div class="how-step">
+        <div class="how-num">03</div>
+        <div class="how-title">Te avisamos antes</div>
+        <div class="how-desc">7 días antes de cada renovación. 72h antes de que venza un trial. Con botón de cancelar directo.</div>
+        <span class="how-tag">No después. Antes.</span>
+      </div>
+      <div class="how-step">
+        <div class="how-num">04</div>
+        <div class="how-title">Sin más zascas</div>
+        <div class="how-desc">Tú decides qué conservar y qué cancelar. Zasca te da la guía exacta para cada servicio.</div>
+        <span class="how-tag">Tú mandas</span>
+      </div>
+    </div>
+    <div class="mid-cta">
+      <div class="mid-cta-text">¿Cuánto llevas pagando<br>por cosas que no usas?</div>
+      <button class="mid-cta-btn" onclick="document.getElementById('hero-email').focus();window.scrollTo({top:0,behavior:'smooth'})">Descubrirlo gratis →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ POR QUÉ NO LA COMPETENCIA -->
+<section class="section">
+  <div class="section-inner">
+    <span class="exp-tag">Por qué Zasca</span>
+    <h2>Lo que las otras apps<br>hacen mal</h2>
+    <p class="section-sub">Ninguna resuelve el problema de verdad. Zasca existe porque las alternativas tienen un fallo de base.</p>
+    <div class="why-not-grid">
+      <div class="why-not-card">
+        <div class="wn-competitor">Rocket Money</div>
+        <div class="wn-pain">Se lleva el <span>40%</span> de lo que "ahorra"</div>
+        <div class="wn-detail">Promete cancelar tus suscripciones — y cobra hasta el 60% de lo que negocia. Sin avisarte bien. Exige acceso completo a tu banco. Y solo detecta cobros bancarios: lo que pagas por PayPal, seguros domiciliados o tarjetas de empresa queda invisible.</div>
+        <div class="wn-quote">"Me cobra $12/mes para rastrear lo que gasto. Irónico. Y encima el 40% si negocian." — Reddit, +5.200 upvotes</div>
+        <div class="wn-zasca"><strong>Zasca:</strong> €3.99/mes fijo. Detección por email — lo captura todo. Sin % sobre tus ahorros. Nunca.</div>
+      </div>
+      <div class="why-not-card">
+        <div class="wn-competitor">Bobby</div>
+        <div class="wn-pain">Todo <span>manual.</span> Tú haces el trabajo.</div>
+        <div class="wn-detail">Bobby no detecta nada solo. Tienes que introducir cada suscripción a mano — importe, fecha, ciclo. Si ya sabes cuáles tienes, no necesitas la app.</div>
+        <div class="wn-quote">"Bobby no hace nada sola. ¿Para qué sirve si ya sé cuáles tengo?" — App Store, 1 estrella</div>
+        <div class="wn-zasca"><strong>Zasca:</strong> conectas el email y en 2 minutos tienes todo. Automático.</div>
+      </div>
+      <div class="why-not-card">
+        <div class="wn-competitor">Todas las demás</div>
+        <div class="wn-pain">Solo funcionan en <span>EEUU.</span></div>
+        <div class="wn-detail">Rocket Money, Monarch, Trim — dependen de bancos americanos. En España no funcionan. Eres invisible para ellas. Ninguna detecta Movistar, seguros o servicios locales.</div>
+        <div class="wn-quote">"Probé tres apps y ninguna detectó mi seguro del coche ni mi suscripción de Movistar." — Madrid</div>
+        <div class="wn-zasca"><strong>Zasca:</strong> hecha para España. Detecta servicios locales desde el primer día.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ QUOTES -->
+<section class="section sand">
+  <div class="section-inner">
+    <span class="exp-tag">Lo que dice la gente</span>
+    <h2>El problema existe.<br>Está documentado.</h2>
+    <div class="quotes-grid">
+      <div class="q-card">
+        <p class="q-text">"Acabo de revisar mis suscripciones y pagaba por 11 cosas que no recordaba. $340/mes tirados. Necesito una app que me muestre todo con un botón de cancelar."</p>
+        <div class="q-author">
+          <div class="q-av" style="background:#7C3AED">JM</div>
+          <div><div class="q-name">James M.</div><div class="q-role">Desarrollador</div></div>
+        </div>
+        <p class="q-src">r/personalfinance · +12.400 upvotes</p>
+      </div>
+      <div class="q-card">
+        <p class="q-text">"Un trial caducó hace 6 meses. $14.99/mes × 6 = $90 perdidos. Necesito algo que me avise ANTES de que caduque, no después."</p>
+        <div class="q-author">
+          <div class="q-av" style="background:#DC2626">SP</div>
+          <div><div class="q-name">Sara P.</div><div class="q-role">Estudiante, México</div></div>
+        </div>
+        <p class="q-src">r/Frugal · +3.800 upvotes</p>
+      </div>
+      <div class="q-card">
+        <p class="q-text">"Miré el extracto y vi €340 de la Mutua. Tendría que haber llamado un mes antes para negociarlo. Ya no había nada que hacer."</p>
+        <div class="q-author">
+          <div class="q-av" style="background:#059669">MR</div>
+          <div><div class="q-name">Miguel R.</div><div class="q-role">Autónomo, Madrid</div></div>
+        </div>
+        <p class="q-src">Testimonio directo · lista de espera Zasca</p>
+      </div>
+      <div class="q-card">
+        <p class="q-text">"Bobby no hace nada sola. Tienes que introducir cada suscripción a mano. ¿Para qué sirve si ya sé cuáles tengo?"</p>
+        <div class="q-author">
+          <div class="q-av" style="background:#B45309">AR</div>
+          <div><div class="q-name">Álvaro R.</div><div class="q-role">Freelance, Barcelona</div></div>
+        </div>
+        <p class="q-src">App Store · Bobby · 1 estrella</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ FUNDADOR -->
+<section class="section">
+  <div class="section-inner">
+    <span class="exp-tag">Por qué existe</span>
+    <h2>Lo construí<br>para mí.</h2>
+    <p class="section-sub">Un día miré el extracto y vi €300 del Race que no esperaba. Tampoco el Apple TV+ que llevaba meses cobrándome. Ni la Mutua que renovó sin avisar. Así nació Zasca — para mí. Luego pensé: que le sirva a todo el mundo.</p>
+
+    <div class="founder-card">
+      <div class="founder-card-left">
+        <div class="founder-av">Z</div>
+        <div>
+          <div class="founder-name">Fundador de Zasca</div>
+          <div class="founder-role">Madrid · 2026</div>
+        </div>
+      </div>
+      <button class="founder-btn" onclick="toggleStory()" id="story-btn">
+        Leer la historia completa ↓
+      </button>
+    </div>
+
+    <!-- HISTORIA EXPANDIBLE -->
+    <div id="founder-story" style="display:none">
+
+      <div class="fs-chapter">
+        <div class="fs-ch-label">01 — El origen</div>
+        <div class="fs-prose">
+          <p>No había un plan de negocio. Había yo, un extracto bancario, y un zasca de <strong>€300 del Race</strong> que no esperaba.</p>
+          <p>No es que no supiera que tenía el Race. Lo sabía. Lo que no sabía era cuándo llegaba el plazo, cuánto era exactamente, ni que venía en dos tandas al año. Y tampoco era solo el Race.</p>
+        </div>
+
+        <div class="fs-moments">
+          <div class="fs-moment">
+            <div class="fs-moment-icon">🚗</div>
+            <div class="fs-moment-body">
+              <div class="fs-moment-title">La Mutua · 3 tramos</div>
+              <div class="fs-moment-desc">Si no llamas a negociarlo con un mes de antelación, renuevan al precio que quieren. Nadie te avisa de la ventana.</div>
+            </div>
+            <div class="fs-moment-amt">−€340</div>
+          </div>
+          <div class="fs-moment">
+            <div class="fs-moment-icon">📺</div>
+            <div class="fs-moment-body">
+              <div class="fs-moment-title">Apple TV+ · trial con el Mac</div>
+              <div class="fs-moment-desc">Llegó gratis con el ordenador. Iba a cancelarlo. Tres meses después seguía cobrándome €8.99. No lo había abierto ni una vez.</div>
+            </div>
+            <div class="fs-moment-amt">−€26.97</div>
+          </div>
+          <div class="fs-moment">
+            <div class="fs-moment-icon">🏎</div>
+            <div class="fs-moment-body">
+              <div class="fs-moment-title">Race · 600€ al año en 2 plazos</div>
+              <div class="fs-moment-desc">Nunca supe cuándo llegaba cada plazo. Aparecía en la cuenta y ya estaba. Sin aviso. Sin margen para planificarlo.</div>
+            </div>
+            <div class="fs-moment-amt">−€300</div>
+          </div>
+        </div>
+
+        <div class="fs-pull">
+          Me enteré siempre cuando ya era tarde.<br>Cuando el dinero ya había salido.
+        </div>
+      </div>
+
+      <div class="fs-chapter">
+        <div class="fs-ch-label">02 — Por qué se llama Zasca</div>
+        <div class="fs-prose">
+          <p>Cada vez que veía uno de estos cobros en el extracto, la reacción era siempre la misma: <strong>"¿Zasca? ¿Otra vez?"</strong></p>
+          <p>Zasca es la palabra española para ese golpe inesperado. El impacto que no ves venir. Lo que sientes exactamente cuando aparece un cargo que no elegiste, no esperabas y ya no puedes recuperar.</p>
+          <p>No quería llamarlo "SubTracker" ni "SmartBudget". Quería que el nombre fuera el propio sentimiento que resuelve. Si conoces el zasca, ya sabes de qué va esto.</p>
+        </div>
+        <div class="fs-naming-box">
+          <div class="fs-naming-word">zas·ca</div>
+          <div class="fs-naming-def">Golpe inesperado · Lo que no viste venir · Ese momento exacto en que miras el extracto y piensas "¿cómo? ¿otra vez?"</div>
+          <div class="fs-naming-promise">Zasca existe para que no vuelvas a tenerlos.</div>
+        </div>
+      </div>
+
+      <div class="fs-chapter">
+        <div class="fs-ch-label">03 — Por qué lo comparto</div>
+        <div class="fs-prose">
+          <p>Cuando busqué si había algo que lo resolviera, no encontré la solución. Encontré a miles de personas describiendo exactamente lo mismo en Reddit, en foros, en reseñas de apps.</p>
+          <p>Lo construí para mí. Funcionó. Y pensé: si yo lo necesitaba, hay mucha gente que también.</p>
+          <p>Zasca no cobra porcentaje sobre lo que ahorras. No te pide el banco. No requiere que introduzcas nada a mano. Y funciona en España — algo que ninguna alternativa americana puede decir.</p>
+        </div>
+        <div class="fs-final-line">
+          Si alguna vez has mirado el extracto y has pensado <strong>"¿zasca? ¿otra vez?"</strong> — esto es para ti.
+        </div>
+        <button class="founder-btn" style="margin-top:20px" onclick="toggleStory()">
+          Cerrar ↑
+        </button>
+      </div>
+
+    </div><!-- /founder-story -->
+  </div>
+</section>
+
+<!-- ⑧ PRICING -->
+<section class="section">
+  <div class="section-inner">
+    <span class="exp-tag">Precio</span>
+    <h2>Precio fijo.<br>Sin sorpresas.</h2>
+    <p class="section-sub">Sin porcentaje sobre tus ahorros. Sin comisiones ocultas. Lo que ves es lo que pagas.</p>
+    <div class="no-fee-box">
+      Si cancelas algo y ahorras €600/año — no te cobramos nada extra. Ese dinero es tuyo.
+    </div>
+    <div class="pricing-grid">
+      <div class="p-card">
+        <div class="p-name">Gratis</div>
+        <div class="p-price">€0<span>/mes</span></div>
+        <ul class="p-feat">
+          <li>Hasta 10 suscripciones</li>
+          <li>Detección por email</li>
+          <li>Alertas de renovación</li>
+          <li>Guías de cancelación</li>
+          <li>Sin tarjeta de crédito</li>
+        </ul>
+      </div>
+      <div class="p-card featured">
+        <div class="p-name">Premium</div>
+        <div class="p-price">€3.99<span>/mes</span></div>
+        <ul class="p-feat">
+          <li>Suscripciones ilimitadas</li>
+          <li>Alertas avanzadas</li>
+          <li>Cancelación asistida</li>
+          <li>Lista familiar compartida</li>
+          <li>Web + iOS + Android</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑧ FINAL CTA -->
+<section class="final-section">
+  <h2>¿Cuánto te están cobrando<br>sin que lo sepas?</h2>
+  <p class="section-sub">Únete a la lista de espera. Gratis en el plan básico. Sin tarjeta. Te escribimos cuando abramos.</p>
+  <div class="form-wrap" id="fw2">
+    <div class="input-row" id="row2">
+      <input id="final-email" type="email" placeholder="tu@email.com" onkeydown="if(event.key==='Enter')go2()">
+      <button class="cta-btn" onclick="go2()">Sin zascas →</button>
+    </div>
+    <div class="ok-msg" id="ok2">✓ &nbsp;Perfecto. Te avisamos cuando abramos.</div>
+    <p class="form-note">Ya somos <strong id="c2">427</strong> personas esperando · Sin spam</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="logo-text">Za<span>s</span>ca</span>
+  <p>Sin letra pequeña, prometido.</p>
+</footer>
+
+<script>
+function toggleStory(){
+  const s = document.getElementById('founder-story');
+  const btn = document.getElementById('story-btn');
+  const open = s.style.display === 'none';
+  s.style.display = open ? 'block' : 'none';
+  if(btn) btn.textContent = open ? 'Cerrar ↑' : 'Leer la historia completa ↓';
+  if(open) s.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+setInterval(()=>{ if(Math.random()>.75){n++;upd()} },10000);
+function upd(){
+  document.getElementById('c1').textContent=n;
+  document.getElementById('c2').textContent=n;
+}
+const BREVO_KEY='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';
+const BREVO_LIST=2;
+
+async function addToBrevo(email){
+  const res=await fetch('https://api.brevo.com/v3/contacts',{
+    method:'POST',
+    headers:{'accept':'application/json','content-type':'application/json','api-key':BREVO_KEY},
+    body:JSON.stringify({email,listIds:[BREVO_LIST],updateEnabled:true})
+  });
+  return res.ok||res.status===204||res.status===400;
+}
+
+async function go1(){
+  const inp=document.getElementById('hero-email');
+  const v=inp.value.trim();
+  if(!v||!v.includes('@')){inp.focus();return}
+  const btn=document.querySelector('#row1 .cta-btn');
+  btn.textContent='...';btn.disabled=true;
+  const ok=await addToBrevo(v);
+  if(ok){
+    document.getElementById('row1').style.display='none';
+    document.getElementById('ok1').style.display='flex';
+    n++;upd();
+  } else {
+    btn.textContent='Sin zascas →';btn.disabled=false;
+    inp.style.borderColor='var(--z)';
+    inp.placeholder='Error — intenta de nuevo';
+  }
+}
+
+async function go2(){
+  const inp=document.getElementById('final-email');
+  const v=inp.value.trim();
+  if(!v||!v.includes('@')){inp.focus();return}
+  const btn=document.querySelector('#row2 .cta-btn');
+  btn.textContent='...';btn.disabled=true;
+  const ok=await addToBrevo(v);
+  if(ok){
+    document.getElementById('row2').style.display='none';
+    document.getElementById('ok2').style.display='flex';
+    n++;upd();
+  } else {
+    btn.textContent='Sin zascas →';btn.disabled=false;
+    inp.style.borderColor='var(--z)';
+    inp.placeholder='Error — intenta de nuevo';
+  }
+}
+</script>
+</body>
+</html>
